@@ -1,11 +1,34 @@
 # ForeTees Staff (`flutter_foretees_staff`) — Testing Readiness Report
 Generated from the current Flutter codebase on 2026-05-18. Scope includes `lib/` (713 Dart files) and the current `test/` folder (4 Dart files).
+
+## Index
+
+1. [Project Overview](#1-project-overview)
+2. [Testing Scope Inventory](#2-testing-scope-inventory)
+3. [Tightly Coupled Code — Identified Blockers](#3-tightly-coupled-code-identified-blockers)
+4. [Refactoring Plan (Testing-Only, No Cleanup)](#4-refactoring-plan)
+5. [Refactoring Priority Order](#5-refactoring-priority-order)
+6. [Unit Testing Plan — Module by Module](#6-unit-testing-plan)
+7. [Integration & Widget Testing Opportunities](#7-integration-widget-testing)
+8. [Definition of Done — Per File](#8-definition-of-done)
+9. [Progress Tracking Metrics](#9-progress-tracking-metrics)
+10. [Consistency Standards Across Developers](#10-consistency-standards)
+11. [Real Examples from THIS Codebase](#11-real-examples)
+12. [Recommended `flutter_test` Setup](#12-flutter-test-setup)
+
+---
+
+<a id="1-project-overview"></a>
+
 ## 1. Project Overview
 - **What it does:** ForeTees Staff is a multi-platform staff operations app for club workflows: login, dashboard access, food ordering, location/member check-in, valet, event check-in, inventory counts, lesson pro, member photos, photo gallery, push notifications, starter/timesheets, golf bag requests, MQTT updates, and FT Messaging launch.
 - **Entry points:** `lib/main_dev.dart`, `lib/main_staging.dart`, and `lib/main_prod.dart` call `start(Environment...)` in `lib/main.dart`. `lib/main.dart` performs Firebase, Crashlytics, FCM, window, DI, shared preferences, timezone, router, and BLoC provider bootstrapping.
 - **Architecture:** Clean Architecture style with `presentation` BLoCs/Cubits, `domain` use cases/repository contracts, `data` repository implementations/models/mappers/local managers, `remote` services/network client, `get_it` service locator via `InjectionUtils`, `flutter_bloc`, and `go_router`.
 - **Existing test baseline:** `flutter test` currently fails 2 Auth BLoC tests because `test/presentation/blocs/auth/auth_bloc_test.dart` still verifies `SubscribeFcmTopicsUseCase.executeSubscribe(...)`, but `AuthBloc` now only receives `LoginUseCase` and no longer subscribes topics. Passing tests before expansion should start by aligning those expectations with the current Auth design.
 - **Major modules/features found:** Auth, Splash, Home/Dashboard/FT Messaging, Valet, Location Check-In, Manual Check-In, Event Check-In, Food Ordering, Golf Bag Request, Inventory Stock Count, Lesson Pro, Member Photos, Member Search, Photo Gallery/Create Album, Push/Web Notification, Starter & Timesheet, MQTT, Remote API/Network, Local Storage/Platform Services, Shared Data Models/Mappers, Shared Widgets, Utilities, Routing, Dependency Injection, App Bootstrap.
+
+<a id="2-testing-scope-inventory"></a>
+
 ## 2. Testing Scope Inventory
 Legend: ✅ Unit Testable = can be tested now with mocks/fakes; ⚠️ Needs Minor Refactor = a small seam is needed; ❌ Needs Major Refactor = static/global/plugin coupling prevents isolated tests; ⏭️ Skip for Now = barrel/generated/constants/UI leaf to cover through parent flows.
 ### Auth
@@ -756,6 +779,9 @@ Legend: ✅ Unit Testable = can be tested now with mocks/fakes; ⚠️ Needs Min
 - `lib/remote/services/valet/valet_api_end_points.dart` — ⏭️ Skip for Now — Recommended: None — barrel/config/constants/generated or visual resource
 - `lib/remote/services/valet/valet_api_service.dart` — ✅ Unit Testable — Recommended: Unit — dependencies injectable/mappable
 - `lib/remote/services/valet/valet_api_service_provider.dart` — ✅ Unit Testable — Recommended: Unit — dependencies injectable/mappable
+
+<a id="3-tightly-coupled-code-identified-blockers"></a>
+
 ## 3. Tightly Coupled Code — Identified Blockers
 | File | What test CANNOT be written today? | What dependency/coupling is blocking it? | Smallest refactor to unblock testing | Risk this refactor introduces | Suggested Priority |
 |------|--------------------------------------|------------------------------------------|--------------------------------------|-------------------------------|-------------------|
@@ -908,6 +934,9 @@ Legend: ✅ Unit Testable = can be tested now with mocks/fakes; ⚠️ Needs Min
 | lib/presentation/screens/valet/valet_page_view.dart | Unit/widget test cannot isolate this file without configuring global/plugin state. | platform singleton; service locator/global DI lookup; time/timer dependency | Inject the named dependency behind a constructor parameter or small adapter; keep production registration in DI. | Low-medium, depending on constructor/DI changes. | P2 |
 | lib/presentation/screens/valet/widget/parking_request_user_card.dart | Unit/widget test cannot isolate this file without configuring global/plugin state. | time/timer dependency | Inject the named dependency behind a constructor parameter or small adapter; keep production registration in DI. | Low-medium, depending on constructor/DI changes. | P2 |
 | lib/presentation/screens/valet/widget/parking_tab_header_button_widget.dart | Unit/widget test cannot isolate this file without configuring global/plugin state. | global navigator/dialog dependency; service locator/global DI lookup | Inject the named dependency behind a constructor parameter or small adapter; keep production registration in DI. | Low-medium, depending on constructor/DI changes. | P2 |
+
+<a id="4-refactoring-plan"></a>
+
 ## 4. Refactoring Plan (Testing-Only, No Cleanup)
 Only the changes below are needed to unblock tests; they are not architectural cleanup recommendations.
 ### `lib/data/repositories/auth_repositories_impl.dart`
@@ -967,6 +996,9 @@ AuthApiRepositoryImpl(
      _firebaseNotificationManager = firebaseNotificationManager,
      _progressRunner = progressRunner;
 ```
+
+<a id="5-refactoring-priority-order"></a>
+
 ## 5. Refactoring Priority Order
 - **1. `lib/data/repositories/auth_repositories_impl.dart`** — Auth is the team-decided starting module and this file blocks repository-level login payload/storage tests.
 - **2. `lib/presentation/screens/auth/login_page_view.dart`** — Small Auth refactor with immediate widget-test payoff and low behavioral risk.
@@ -979,6 +1011,9 @@ AuthApiRepositoryImpl(
 - **9. `lib/presentation/blocs/photo_gallery/photo_gallery_bloc.dart` / `create_album_bloc.dart`** — Shared media abstraction will also help Valet and future upload flows.
 - **10. `lib/utils/navigator/app_router.dart`** — Valuable for auth route guards, but widget/integration tests can start before router factory work.
 - **11. `lib/main.dart`** — Large bootstrap split; defer until unit/widget layers are healthier.
+
+<a id="6-unit-testing-plan"></a>
+
 ## 6. Unit Testing Plan — Module by Module
 ### Auth
 - `lib/presentation/blocs/auth/auth_bloc.dart`
@@ -1146,11 +1181,17 @@ AuthApiRepositoryImpl(
   - Expected results: stored values by type
   - Edge cases: null prefs before init, wrong type
   - Mocks/stubs: SharedPreferences.setMockInitialValues
+
+<a id="7-integration-widget-testing"></a>
+
 ## 7. Integration & Widget Testing Opportunities
 - **Widget tests that can begin in parallel now:** `LoginFormWidget`, Auth validation dialogs, Home access-list rendering with mocked `HomeBloc`, simple BLoC-driven screens that accept external providers, leaf cards such as food order cards, golf request cards, event/member cards, inventory stock cards, and photo album cards.
 - **Widget tests needing minor refactor first:** `LoginPageView` DI construction, Location Check-In QR/manual check-in dialog flows, Home dashboard navigation/update dialogs, Photo Gallery/Create Album media pick flows, Valet image pick/check-in screens, stock QR scanner global navigation, and widgets that call `InjectionUtils` directly.
 - **Integration/E2E flows:** cold start -> splash -> login -> dashboard; login failure/validation; dashboard access by permissions; food order location switch -> order details -> status update; location QR/manual check-in -> checkout; valet check-in with images -> checkout request -> checkout; event check-in registered/walk-on member; push notification create/send/resend/delete; photo gallery create album/upload/approve/delete; inventory scan/update count; session expiry 401 -> logout.
 - **Parallelizable with unit testing:** Auth widget tests, pure use-case/mapper/model tests, BLoC tests where dependencies are constructor-injected, and integration smoke tests that use mocked/staging backends. Media picker, Firebase/session expiry, and router redirect tests should wait for their adapter refactors.
+
+<a id="8-definition-of-done"></a>
+
 ## 8. Definition of Done — Per File
 Use this matrix per file from the inventory. Each completed file should be logged with its exact path and the applicable row below.
 | File classification | Minimum coverage expectation | Happy paths covered | Error/edge cases covered | Tests passing in CI | Peer reviewed |
@@ -1162,11 +1203,17 @@ Use this matrix per file from the inventory. Each completed file should be logge
 | Widget/screen selected for widget testing | Coverage is not primary; assert user-visible behavior and dispatched events | Yes | Yes: loading/empty/error/disabled states | Yes | Yes |
 | Files marked ⏭️ Skip for Now | Not measured directly | Covered by parent flow where valuable | Covered by parent flow where valuable | Parent tests pass | Yes if touched |
 Per-file DoD exceptions: `lib/main.dart`, `lib/utils/navigator/app_router.dart`, `lib/remote/network/network_client.dart`, and `lib/data/local/managers/session_manager.dart` should not be accepted on percentage alone; acceptance requires scenario coverage for bootstrap/redirect/retry/logout flows because branch behavior matters more than raw coverage.
+
+<a id="9-progress-tracking-metrics"></a>
+
 ## 9. Progress Tracking Metrics
 - In the shared Google Doc, log one row per file: module, exact file path, current classification, target test type, refactor status (`not needed`, `proposed`, `approved`, `done`), test status (`not started`, `in progress`, `done`), PR link, reviewer, CI result, and notes on uncovered risk.
 - Track refactoring separately from testing: a file can be `refactor done` but `tests not done`; do not count it as testing complete until CI contains the new tests.
 - Weekly numbers to report: files tested this week, cumulative files tested, blockers opened, blockers approved, blockers completed, current failing tests, module-level pass rate, coverage delta by module, and top three remaining risks.
 - Suggested dashboard metrics: `BLoC events covered / total BLoC events`, `use cases tested / total use cases`, `repository implementations tested / total repositories`, `widget flows covered / target widget flows`, and `integration smoke flows passing / target flows`.
+
+<a id="10-consistency-standards"></a>
+
 ## 10. Consistency Standards Across Developers
 - Test folder structure should mirror `lib/`: `test/presentation/blocs/<module>/`, `test/presentation/screens/<module>/`, `test/domain/use_cases/<module>/`, `test/data/repositories/`, `test/data/mappers/`, `test/data/models/`, plus `test/helpers/`.
 - Test files should be named `<source_file>_test.dart`, for example `auth_bloc_test.dart`, `login_use_case_test.dart`, `auth_repositories_impl_test.dart`.
@@ -1175,38 +1222,10 @@ Per-file DoD exceptions: `lib/main.dart`, `lib/utils/navigator/app_router.dart`,
 - Every test file header should include a short comment with source file under test, test type, dependencies mocked, and any deliberate coverage exclusions.
 - Shared mocks/fakes belong in `test/helpers/`: reusable mock use cases, fake response builders, `pumpWithScreenUtil`, `pumpWithBloc`, fake `RouteManagement`, fake storage, fake network client responses, and fixture builders for login/member/order/photo models.
 - Prefer `mocktail` for consistency with current tests; use `bloc_test` for BLoC/Cubit behavior; avoid real `GetIt` except where a widget still requires it, and reset `kGetIt` in `tearDown`.
-## 11. Approval & Review Process (Refactoring)
-Before starting any test-enabling refactor, paste this template into the Google Doc and get review approval.
-```markdown
-### Testing Refactor Approval Template
 
-- Module:
-- File(s):
-- Developer:
-- Date:
+<a id="11-real-examples"></a>
 
-1. What test cannot be written today without this refactor?
-   -
-
-2. What specific coupling or dependency is blocking it?
-   -
-
-3. What is the smallest change that unblocks the test?
-   -
-
-4. What regression risk does this refactor carry?
-   -
-
-5. How will the refactor be verified?
-   - Unit tests:
-   - Widget tests:
-   - Manual smoke, if needed:
-
-6. Who reviewed and approved it?
-   - Reviewer:
-   - Approval date:
-```
-## 12. Real Examples from THIS Codebase
+## 11. Real Examples from THIS Codebase
 ### Example 1: Auth repository resolves hard dependencies from GetIt
 Current code in `lib/data/repositories/auth_repositories_impl.dart`:
 ```dart
@@ -1348,7 +1367,10 @@ blocTest<LocationCheckInBloc, LocationCheckInState>(
   verify: (_) => expect(mismatchCalled, isTrue),
 );
 ```
-## 13. Recommended `flutter_test` Setup
+
+<a id="12-flutter-test-setup"></a>
+
+## 12. Recommended `flutter_test` Setup
 - Current dev dependencies already include `flutter_test`, `bloc_test`, and `mocktail`. That is enough for most unit/widget tests.
 - Add `build_runner` only if the team chooses generated mocks or generated fixtures later; with `mocktail`, it is not required today.
 - Project-specific helpers to add: `test/helpers/pump_app.dart` for `MaterialApp`/`ScreenUtilInit` wrappers, `test/helpers/fakes.dart` for fake model builders, `test/helpers/mock_route_management.dart`, `test/helpers/fake_storage.dart`, and `test/helpers/network_response_builder.dart`.
