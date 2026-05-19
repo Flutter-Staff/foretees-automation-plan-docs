@@ -1175,38 +1175,8 @@ Per-file DoD exceptions: `lib/main.dart`, `lib/utils/navigator/app_router.dart`,
 - Every test file header should include a short comment with source file under test, test type, dependencies mocked, and any deliberate coverage exclusions.
 - Shared mocks/fakes belong in `test/helpers/`: reusable mock use cases, fake response builders, `pumpWithScreenUtil`, `pumpWithBloc`, fake `RouteManagement`, fake storage, fake network client responses, and fixture builders for login/member/order/photo models.
 - Prefer `mocktail` for consistency with current tests; use `bloc_test` for BLoC/Cubit behavior; avoid real `GetIt` except where a widget still requires it, and reset `kGetIt` in `tearDown`.
-## 11. Approval & Review Process (Refactoring)
-Before starting any test-enabling refactor, paste this template into the Google Doc and get review approval.
-```markdown
-### Testing Refactor Approval Template
 
-- Module:
-- File(s):
-- Developer:
-- Date:
-
-1. What test cannot be written today without this refactor?
-   -
-
-2. What specific coupling or dependency is blocking it?
-   -
-
-3. What is the smallest change that unblocks the test?
-   -
-
-4. What regression risk does this refactor carry?
-   -
-
-5. How will the refactor be verified?
-   - Unit tests:
-   - Widget tests:
-   - Manual smoke, if needed:
-
-6. Who reviewed and approved it?
-   - Reviewer:
-   - Approval date:
-```
-## 12. Real Examples from THIS Codebase
+## 11. Real Examples from THIS Codebase
 ### Example 1: Auth repository resolves hard dependencies from GetIt
 Current code in `lib/data/repositories/auth_repositories_impl.dart`:
 ```dart
@@ -1348,7 +1318,7 @@ blocTest<LocationCheckInBloc, LocationCheckInState>(
   verify: (_) => expect(mismatchCalled, isTrue),
 );
 ```
-## 13. Recommended `flutter_test` Setup
+## 12. Recommended `flutter_test` Setup
 - Current dev dependencies already include `flutter_test`, `bloc_test`, and `mocktail`. That is enough for most unit/widget tests.
 - Add `build_runner` only if the team chooses generated mocks or generated fixtures later; with `mocktail`, it is not required today.
 - Project-specific helpers to add: `test/helpers/pump_app.dart` for `MaterialApp`/`ScreenUtilInit` wrappers, `test/helpers/fakes.dart` for fake model builders, `test/helpers/mock_route_management.dart`, `test/helpers/fake_storage.dart`, and `test/helpers/network_response_builder.dart`.
