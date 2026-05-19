@@ -1,5 +1,22 @@
 # Foretees Caddie — Testing Readiness Report
 
+## Index
+
+1. [Project Overview](#1-project-overview)
+2. [Testing Scope Inventory](#2-testing-scope-inventory)
+3. [Tightly Coupled Code — Identified Blockers](#3-tightly-coupled-code--identified-blockers)
+4. [Refactoring Plan (Testing-Only, No Cleanup)](#4-refactoring-plan-testing-only-no-cleanup)
+5. [Refactoring Priority Order](#5-refactoring-priority-order)
+6. [Unit Testing Plan — Module by Module](#6-unit-testing-plan--module-by-module)
+7. [Integration & Widget Testing Opportunities](#7-integration--widget-testing-opportunities)
+8. [Definition of Done — Per File](#8-definition-of-done--per-file)
+9. [Progress Tracking Metrics](#9-progress-tracking-metrics)
+10. [Consistency Standards Across Developers](#10-consistency-standards-across-developers)
+11. [Approval & Review Process (Refactoring)](#11-approval--review-process-refactoring)
+12. [Real Examples from THIS Codebase](#12-real-examples-from-this-codebase)
+13. [Recommended `flutter_test` Setup](#13-recommended-flutter_test-setup)
+14. [Summary Table](#summary-table)
+
 ## 1. Project Overview
 
 Foretees Caddie is a Flutter application for caddies to log in to a club, manage schedule availability, confirm/decline/check in for loop assignments, read feed/rules content, update profile and notification preferences, contact the club, view loop history, and manage area/region assignments.

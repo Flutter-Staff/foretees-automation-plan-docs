@@ -1,5 +1,23 @@
 # ft_members_app — Testing Readiness Report
 
+## Index
+
+1. [Project Overview](#section-1-project-overview)
+2. [Testing Scope Inventory](#section-2-testing-scope-inventory)
+3. [Tightly Coupled Code — Identified Blockers](#section-3-tightly-coupled-code-identified-blockers)
+4. [Refactoring Plan (Testing-Only, No Cleanup)](#section-4-refactoring-plan-testing-only-no-cleanup)
+5. [Refactoring Priority Order](#section-5-refactoring-priority-order)
+6. [Unit Testing Plan — Module by Module](#section-6-unit-testing-plan-module-by-module)
+7. [Integration & Widget Testing Opportunities](#section-7-integration-widget-testing-opportunities)
+8. [Definition of Done — Per File](#section-8-definition-of-done-per-file)
+9. [Progress Tracking Metrics](#section-9-progress-tracking-metrics)
+10. [Consistency Standards Across Developers](#section-10-consistency-standards-across-developers)
+11. [Approval & Review Process (Refactoring)](#section-11-approval-review-process-refactoring)
+12. [Real Examples from THIS Codebase](#section-12-real-examples-from-this-codebase)
+13. [Recommended `flutter_test` Setup](#section-13-recommended-flutter-test-setup)
+14. [Summary Table](#summary-table)
+
+<a id="section-1-project-overview"></a>
 ## 1. Project Overview
 
 - **Project**: `ft_members_app`
@@ -45,6 +63,7 @@
 - Shared widgets
 - Shared utils/navigation/resources
 
+<a id="section-2-testing-scope-inventory"></a>
 ## 2. Testing Scope Inventory
 
 Legend:
@@ -537,6 +556,7 @@ Remaining shared model files are mostly JSON/data classes and should be unit tes
 | `lib/models/test_app_setting_res.dart` | ✅ Unit Testable | Unit |
 | `lib/models/user_model.dart` | ✅ Unit Testable | Unit |
 
+<a id="section-3-tightly-coupled-code-identified-blockers"></a>
 ## 3. Tightly Coupled Code — Identified Blockers
 
 | File | What test CANNOT be written today? | What dependency/coupling is blocking it? | Smallest refactor to unblock testing | Risk this refactor introduces | Suggested Priority |
@@ -556,6 +576,7 @@ Remaining shared model files are mostly JSON/data classes and should be unit tes
 | `lib/services/qr_code_navigation_handler.dart` | Unit test QR route mapping and feature navigation. | Static service style, `Get.find<HomeController>`, static `RouteManagement`, static `Utility.launchURL`, DoorDeck. | Add navigation and URL launcher facade; pass HomeController or feature context explicitly. | Medium; large routing matrix but good test value. | P2 |
 | `lib/data/local/db_wrapper.dart` | Unit test cart/address persistence without real SharedPreferences, secure storage, and Localstore. | Creates `SharedPreferences.getInstance`, `FlutterSecureStorage`, `Localstore.instance`; methods show loaders/snackbars. | Constructor-inject preferences/secure/localstore wrappers; separate cart/address storage from UI feedback. | Medium; storage behavior is shared. | P1 |
 
+<a id="section-4-refactoring-plan-testing-only-no-cleanup"></a>
 ## 4. Refactoring Plan (Testing-Only, No Cleanup)
 
 ### `lib/controllers/auth/auth_controller.dart`
@@ -764,6 +785,7 @@ HomeController get homeController {
 
 Exact change: inject/override `HomeController` or `CalendarDataSource` for API methods; pure date methods can be tested now. Estimated effort: **Medium (2-4hr)**.
 
+<a id="section-5-refactoring-priority-order"></a>
 ## 5. Refactoring Priority Order
 
 1. `lib/repositories/auth_repository.dart` — Auth starts first by team decision. This is low-risk and immediately enables repository payload/header/URL tests.
@@ -780,6 +802,7 @@ Exact change: inject/override `HomeController` or `CalendarDataSource` for API m
 12. `lib/services/qr_code_navigation_handler.dart` — Good unit target after navigation facade exists.
 13. `lib/services/doordeck_service.dart` and `lib/controllers/settings/settings_controller.dart` — Small wrappers around plugins; useful later.
 
+<a id="section-6-unit-testing-plan-module-by-module"></a>
 ## 6. Unit Testing Plan — Module by Module
 
 ### Auth
@@ -896,6 +919,7 @@ Start with pure methods in `ordering_mixin.dart` after exposing through a small 
 | `qr_controller.dart` | `getQrToken`, polling step, lifecycle pause/resume | fake QR response and clock | state transitions idle/loading/success/error | expired token, null response, concurrent request | fake QR VM, fake UserDataManager, fake clock/timer |
 | `doordeck_service.dart` | `initDoorDeck`, `updateDoorDeck`, `handleNfcUrl`, `unlockTileId` | fake token/user/login state | plugin wrapper called or skipped | desktop width, missing token, plugin exception | fake plugin, fake size provider, fake DB/CommonVM |
 
+<a id="section-7-integration-widget-testing-opportunities"></a>
 ## 7. Integration & Widget Testing Opportunities
 
 ### Widget tests that can start in parallel now
@@ -952,6 +976,7 @@ Wait for refactors:
 - Photo/camera/upload tests.
 - Main app bootstrap smoke test.
 
+<a id="section-8-definition-of-done-per-file"></a>
 ## 8. Definition of Done — Per File
 
 Use this DoD for every tested file. For generated/barrel/constants/theme-only files, coverage is not the metric; skip decision must be explicit in tracking.
@@ -978,6 +1003,7 @@ Per-file checklist to mark done:
 - Tests pass locally and in CI.
 - Reviewer confirmed tests assert behavior, not implementation noise.
 
+<a id="section-9-progress-tracking-metrics"></a>
 ## 9. Progress Tracking Metrics
 
 ### What to log in the shared Google Doc per file
@@ -1018,6 +1044,7 @@ Never mark testing as done only because a refactor merged. A refactor only unblo
 - Coverage trend by module, not just whole project.
 - Blocked files older than one week.
 
+<a id="section-10-consistency-standards-across-developers"></a>
 ## 10. Consistency Standards Across Developers
 
 ### Test folder structure
@@ -1083,6 +1110,7 @@ Every test file should include:
 - Use `SharedPreferences.setMockInitialValues({})` for current SharedPreferences code until DB wrapper is injectable.
 - Avoid one large global mock file; keep helpers small and module-oriented.
 
+<a id="section-11-approval-review-process-refactoring"></a>
 ## 11. Approval & Review Process (Refactoring)
 
 Before starting any testing-only refactor, paste this template into the shared Google Doc:
@@ -1130,6 +1158,7 @@ Describe the exact constructor parameter, wrapper, fake, or extracted pure helpe
 - PR/commit link:
 ```
 
+<a id="section-12-real-examples-from-this-codebase"></a>
 ## 12. Real Examples from THIS Codebase
 
 ### Example 1 — Auth Controller Login Flow
@@ -1280,6 +1309,7 @@ test('Given emoji in ordering note when sanitized then emoji is removed', () {
 });
 ```
 
+<a id="section-13-recommended-flutter-test-setup"></a>
 ## 13. Recommended `flutter_test` Setup
 
 Current `pubspec.yaml` has:
@@ -1341,6 +1371,7 @@ flutter test --coverage
 flutter test integration_test
 ```
 
+<a id="summary-table"></a>
 ## Summary Table
 
 | Module | Files Total | Testable Now | Needs Refactor | Skip | Estimated Effort |
