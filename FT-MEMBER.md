@@ -12,10 +12,9 @@
 8. [Definition of Done — Per File](#section-8-definition-of-done-per-file)
 9. [Progress Tracking Metrics](#section-9-progress-tracking-metrics)
 10. [Consistency Standards Across Developers](#section-10-consistency-standards-across-developers)
-11. [Approval & Review Process (Refactoring)](#section-11-approval-review-process-refactoring)
-12. [Real Examples from THIS Codebase](#section-12-real-examples-from-this-codebase)
-13. [Recommended `flutter_test` Setup](#section-13-recommended-flutter-test-setup)
-14. [Summary Table](#summary-table)
+11. [Real Examples from THIS Codebase](#section-12-real-examples-from-this-codebase)
+12. [Recommended `flutter_test` Setup](#section-13-recommended-flutter-test-setup)
+13. [Summary Table](#summary-table)
 
 <a id="section-1-project-overview"></a>
 ## 1. Project Overview
@@ -1110,56 +1109,8 @@ Every test file should include:
 - Use `SharedPreferences.setMockInitialValues({})` for current SharedPreferences code until DB wrapper is injectable.
 - Avoid one large global mock file; keep helpers small and module-oriented.
 
-<a id="section-11-approval-review-process-refactoring"></a>
-## 11. Approval & Review Process (Refactoring)
-
-Before starting any testing-only refactor, paste this template into the shared Google Doc:
-
-```md
-## Testing Refactor Request
-
-**Developer:**
-**Date:**
-**Module:**
-**File:**
-**Target test file:**
-
-### 1. What test cannot be written today without this refactor?
-
-Example: "Cannot unit test AuthController.memberLogin success because it calls static Utility methods, Get.find services, and RouteManagement directly."
-
-### 2. What specific coupling or dependency is blocking it?
-
-- Dependency 1:
-- Dependency 2:
-- Dependency 3:
-
-### 3. What is the smallest change that unblocks the test?
-
-Describe the exact constructor parameter, wrapper, fake, or extracted pure helper. Do not include cleanup or style changes.
-
-### 4. What regression risk does this refactor carry?
-
-- User-facing behavior risk:
-- Startup/navigation risk:
-- Data persistence risk:
-- Plugin/platform risk:
-
-### 5. How will the refactor be verified?
-
-- Unit tests:
-- Widget tests:
-- Manual check, if needed:
-
-### 6. Who reviewed and approved it?
-
-- Reviewer:
-- Approval date:
-- PR/commit link:
-```
-
 <a id="section-12-real-examples-from-this-codebase"></a>
-## 12. Real Examples from THIS Codebase
+## 11. Real Examples from THIS Codebase
 
 ### Example 1 — Auth Controller Login Flow
 
@@ -1310,7 +1261,7 @@ test('Given emoji in ordering note when sanitized then emoji is removed', () {
 ```
 
 <a id="section-13-recommended-flutter-test-setup"></a>
-## 13. Recommended `flutter_test` Setup
+## 12. Recommended `flutter_test` Setup
 
 Current `pubspec.yaml` has:
 

@@ -12,10 +12,9 @@
 8. [Definition of Done — Per File](#8-definition-of-done--per-file)
 9. [Progress Tracking Metrics](#9-progress-tracking-metrics)
 10. [Consistency Standards Across Developers](#10-consistency-standards-across-developers)
-11. [Approval & Review Process (Refactoring)](#11-approval--review-process-refactoring)
-12. [Real Examples from THIS Codebase](#12-real-examples-from-this-codebase)
-13. [Recommended `flutter_test` Setup](#13-recommended-flutter_test-setup)
-14. [Summary Table](#summary-table)
+11. [Real Examples from THIS Codebase](#11-real-examples-from-this-codebase)
+12. [Recommended `flutter_test` Setup](#12-recommended-flutter_test-setup)
+13. [Summary Table](#summary-table)
 
 ## 1. Project Overview
 
@@ -964,50 +963,7 @@ Shared mocks/utilities:
 - Always call `Get.testMode = true` and `Get.reset()` in `setUp`/`tearDown` for tests that touch GetX.
 - Do not hit live APIs in unit tests. Live API tests should move to `integration_test/` or be tagged and gated by environment.
 
-## 11. Approval & Review Process (Refactoring)
-
-Before starting any refactor for testability, paste this template into the shared Google Doc.
-
-```markdown
-## Testing Refactor Approval Request
-
-**Developer:**
-**Date:**
-**Module:**
-**File(s):**
-
-### 1. What test cannot be written today without this refactor?
-
-Example:
-I cannot unit-test `LoginController.submitLogin()` success/failure because it directly calls static navigation and dialog methods.
-
-### 2. What specific coupling or dependency is blocking it?
-
-Example:
-`RouteManagement.goToHome()`, `Utility.showADialogWithAction()`, and `Utility.closeDialog()` are called directly from the controller.
-
-### 3. What is the smallest change that unblocks the test?
-
-Example:
-Inject a `LoginNavigation`/`LoginUiActions` interface with default GetX implementation and use a fake in tests.
-
-### 4. What regression risk does this refactor carry?
-
-Example:
-Login could route to the wrong page if the default adapter maps incorrectly.
-
-### 5. How will the regression risk be covered?
-
-Example:
-Add unit tests for controller success/failure and a widget/integration smoke test for login navigation.
-
-### 6. Who reviewed and approved it?
-
-Reviewer:
-Approval date:
-```
-
-## 12. Real Examples from THIS Codebase
+## 11. Real Examples from THIS Codebase
 
 ### Example 1: Auth Controller Navigation Coupling
 
@@ -1191,7 +1147,7 @@ test('given slot date equals today when checking check-in visibility then return
 });
 ```
 
-## 13. Recommended `flutter_test` Setup
+## 12. Recommended `flutter_test` Setup
 
 Current `pubspec.yaml` has only:
 
