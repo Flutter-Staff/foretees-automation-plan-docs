@@ -1207,11 +1207,82 @@ Per-file DoD exceptions: `lib/main.dart`, `lib/utils/navigator/app_router.dart`,
 <a id="9-progress-tracking-metrics"></a>
 
 ## 9. Progress Tracking Metrics
-- In the shared Google Doc, log one row per file: module, exact file path, current classification, target test type, refactor status (`not needed`, `proposed`, `approved`, `done`), test status (`not started`, `in progress`, `done`), PR link, reviewer, CI result, and notes on uncovered risk.
-- Track refactoring separately from testing: a file can be `refactor done` but `tests not done`; do not count it as testing complete until CI contains the new tests.
-- Weekly numbers to report: files tested this week, cumulative files tested, blockers opened, blockers approved, blockers completed, current failing tests, module-level pass rate, coverage delta by module, and top three remaining risks.
-- Suggested dashboard metrics: `BLoC events covered / total BLoC events`, `use cases tested / total use cases`, `repository implementations tested / total repositories`, `widget flows covered / target widget flows`, and `integration smoke flows passing / target flows`.
 
+Instead of maintaining a separate Google Sheet/Google Doc for progress tracking, all testing and refactoring progress will be managed directly through Jira tickets.
+
+### Jira-Based Tracking Approach
+
+- Each module will have its own dedicated Jira ticket.
+- Every ticket will contain structured checklist items for:
+  - Refactoring tasks
+  - Unit test implementation
+  - Widget test implementation
+  - Integration/smoke testing
+  - Review status
+  - CI validation
+
+### Progress Tracking Rules
+
+- Refactoring and testing must be tracked separately.
+  - A task is not considered complete only because refactoring is done.
+  - Testing completion requires:
+    - Test cases added
+    - CI passing
+    - Code reviewed by another developer
+
+- Developers should update checklist progress continuously within the Jira ticket.
+
+- All testing-related PRs must be linked to the corresponding Jira ticket.
+
+### Suggested Jira Checklist Structure
+
+<ul>
+  <li><input type="checkbox" disabled> Analyze module testability</li>
+  <li><input type="checkbox" disabled> Identify required refactors</li>
+  <li><input type="checkbox" disabled> Complete architecture cleanup/refactor</li>
+  <li><input type="checkbox" disabled> Add unit tests</li>
+  <li><input type="checkbox" disabled> Add widget tests</li>
+  <li><input type="checkbox" disabled> Add integration/smoke tests (if required)</li>
+  <li><input type="checkbox" disabled> Verify local test execution</li>
+  <li><input type="checkbox" disabled> Peer code review completed</li>
+  <li><input type="checkbox" disabled> QA/UAT validation completed</li>
+  <li><input type="checkbox" disabled> Merge approved</li>
+</ul>
+
+### Weekly Tracking Metrics
+
+The following metrics should be reviewed during weekly sync/review meetings:
+
+- Modules completed this week
+- Total cumulative modules completed
+- Refactor tasks completed
+- Pending blockers
+- Approved blockers
+- Current failing tests
+- Module-wise test pass rate
+- Coverage improvement by module
+- Remaining high-risk modules/features
+
+### Recommended Review Process
+
+- Every testing PR should be reviewed by at least one other developer.
+- Review should validate:
+  - Test quality
+  - Proper mocking strategy
+  - Architecture improvements
+  - No UI/business logic coupling
+  - Stable and deterministic tests
+  - CI stability
+
+### Suggested Engineering Metrics
+
+- BLoC events covered vs total BLoC events
+- Use cases tested vs total use cases
+- Repository implementations tested vs total repositories
+- Widget flows covered vs planned widget flows
+- Smoke/integration flows passing vs target flows
+- Number of flaky tests detected
+- Average PR review turnaround time
 <a id="10-consistency-standards"></a>
 
 ## 10. Consistency Standards Across Developers
