@@ -870,41 +870,82 @@ Per-file completion record should state:
 
 ## 9. Progress Tracking Metrics
 
-For each completed file, log this in the shared Google Doc:
+Instead of maintaining a separate Google Sheet/Google Doc for progress tracking, all testing and refactoring progress will be managed directly through Jira tickets.
 
-| Field | What to Record |
-|---|---|
-| Module | Auth, Schedule, Home, etc. |
-| File path | Example: `lib/app/pages/login/login_controller.dart` |
-| Original classification | ✅ / ⚠️ / ❌ / ⏭️ |
-| Final classification | What it is after refactor/test |
-| Refactor PR/link | Link or branch |
-| Test PR/link | Link or branch |
-| Test type | Unit / Widget / Integration |
-| Test file path | Example: `test/app/login/login_controller_test.dart` |
-| Coverage | File coverage or “not metric: widget assertions” |
-| Happy path | Yes/No |
-| Edge/error cases | Yes/No |
-| CI result | Command and pass/fail |
-| Reviewer | Name |
-| Notes | Remaining blockers |
+Before starting any testing or refactoring process on any of the modules. First we need to document that module in it's initial working phase. This detailed documentation will further help after refactoring to test the module related to it's functionalities. This could help us to cover edge cases that might have been handled currently and could be easily missed after refactoring the code.
 
-Report refactoring and testing separately:
+### Jira-Based Tracking Approach
 
-- Refactor done means the smallest approved test seam is merged.
-- Testing done means tests are committed, pass locally, and pass in CI.
-- A file can be “refactor done” but not “testing done”.
+- Each module will have its own dedicated Jira ticket.
+- Every ticket will contain structured checklist items for:
+  - Refactoring tasks
+  - Unit test implementation
+  - Widget test implementation
+  - Integration/smoke testing
+  - Review status
+  - CI validation
 
-Weekly numbers to report:
+### Progress Tracking Rules
 
-- Files completed by module.
-- Files refactored but not yet tested.
-- Tests added by type: unit/widget/integration.
-- Current `flutter test` status.
-- Current `flutter test --coverage` percentage.
-- Number of remaining ⚠️ files.
-- Number of remaining ❌ files.
-- Blocked files with owner and blocker.
+- Refactoring and testing must be tracked separately.
+  - A task is not considered complete only because refactoring is done.
+  - Testing completion requires:
+    - Test cases added
+    - CI passing
+    - Code reviewed by another developer
+
+- Developers should update checklist progress continuously within the Jira ticket.
+
+- All testing-related PRs must be linked to the corresponding Jira ticket.
+
+### Suggested Jira Checklist Structure
+
+<ul>
+  <li><input type="checkbox" disabled> Analyze module testability</li>
+  <li><input type="checkbox" disabled> Identify required refactors</li>
+  <li><input type="checkbox" disabled> Complete architecture cleanup/refactor</li>
+  <li><input type="checkbox" disabled> Add unit tests</li>
+  <li><input type="checkbox" disabled> Add widget tests</li>
+  <li><input type="checkbox" disabled> Add integration/smoke tests (if required)</li>
+  <li><input type="checkbox" disabled> Verify local test execution</li>
+  <li><input type="checkbox" disabled> Peer code review completed</li>
+  <li><input type="checkbox" disabled> QA/UAT validation completed</li>
+  <li><input type="checkbox" disabled> Merge approved</li>
+</ul>
+
+### Weekly Tracking Metrics
+
+The following metrics should be reviewed during weekly sync/review meetings:
+
+- Modules completed this week
+- Total cumulative modules completed
+- Refactor tasks completed
+- Pending blockers
+- Approved blockers
+- Current failing tests
+- Module-wise test pass rate
+- Coverage improvement by module
+- Remaining high-risk modules/features
+
+### Recommended Review Process
+
+- Every testing PR should be reviewed by at least one other developer.
+- Review should validate:
+  - Test quality
+  - Proper mocking strategy
+  - Architecture improvements
+  - No UI/business logic coupling
+  - Stable and deterministic tests
+  - CI stability
+
+### Suggested Engineering Metrics
+
+- Use cases tested vs total use cases
+- Repository implementations tested vs total repositories
+- Widget flows covered vs planned widget flows
+- Smoke/integration flows passing vs target flows
+- Number of flaky tests detected
+- Average PR review turnaround time
 
 ## 10. Consistency Standards Across Developers
 
