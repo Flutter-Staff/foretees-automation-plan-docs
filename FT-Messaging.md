@@ -37,7 +37,7 @@
   - [Integration/E2E candidates](#integratione2e-candidates)
   - [Can run in parallel with unit testing](#can-run-in-parallel-with-unit-testing)
 - [8. Definition of Done — Per File](#8-definition-of-done--per-file)
-- [9. Progress Tracking Metrics](#9-progress-tracking-metrics)
+- [9. Progress Tracking Rules](#9-progress-tracking-metrics)
 - [10. Consistency Standards Across Developers](#10-consistency-standards-across-developers)
 - [11. Approval & Review Process (Refactoring)](#11-approval--review-process-refactoring)
 - [12. Real Examples from THIS Codebase](#12-real-examples-from-this-codebase)
@@ -939,30 +939,84 @@ Per-file Done checklist:
 
 ---
 
-## 9. Progress Tracking Metrics
+## 9. Progress Tracking Rules
 
-For each completed file entry in shared tracking doc:
-- file path
-- classification at start (`✅/⚠️/❌/⏭️`)
-- refactor needed? yes/no
-- refactor PR/link (if any)
-- test PR/link
-- test counts added (`unit/widget/integration`)
-- pass/fail status in CI
-- reviewer + date
+* Refactoring and testing must be tracked separately.
 
-Report refactor and tests separately:
-- `Refactor Done`: count of files moved from `⚠️/❌` to `✅`
-- `Testing Done`: count of files with merged tests + passing CI
+  * A task is not considered complete only because refactoring is done.
+  * Testing completion requires:
 
-Weekly numbers:
-- total files covered this week
-- cumulative % of testable-now files completed
-- cumulative refactor backlog burn-down
-- flaky test count
-- average PR cycle time for test PRs.
+    * Test cases added
+    * CI passing
+    * Code reviewed by another developer
+
+* Developers should update checklist progress continuously within the Jira ticket.
+
+* All testing-related PRs must be linked to the corresponding Jira ticket.
 
 ---
+
+## Suggested Jira Checklist Structure
+
+* Analyze module testability
+* Identify required refactors
+* Complete architecture cleanup/refactor
+* Refactor GetX controllers/services for testability
+* Add unit tests for controllers/services/use cases
+* Add widget tests
+* Add integration/smoke tests (if required)
+* Verify dependency injection and mocking strategy
+* Verify local test execution
+* Peer code review completed
+* QA/UAT validation completed
+* Merge approved
+
+---
+
+## Weekly Tracking Metrics
+
+The following metrics should be reviewed during weekly sync/review meetings:
+
+* Modules completed this week
+* Total cumulative modules completed
+* Refactor tasks completed
+* Pending blockers
+* Approved blockers
+* Current failing tests
+* Module-wise test pass rate
+* Coverage improvement by module
+* Remaining high-risk modules/features
+
+---
+
+## Recommended Review Process
+
+* Every testing PR should be reviewed by at least one other developer.
+* Review should validate:
+
+  * Test quality
+  * Proper mocking strategy
+  * Architecture improvements
+  * Proper GetX dependency management
+  * No UI/business logic coupling
+  * Stable and deterministic tests
+  * CI stability
+
+---
+
+## Suggested Engineering Metrics
+
+* GetX controllers tested vs total controllers
+* GetX services tested vs total services
+* Use cases tested vs total use cases
+* Repository implementations tested vs total repositories
+* Widget flows covered vs planned widget flows
+* Smoke/integration flows passing vs target flows
+* Number of flaky tests detected
+* Average PR review turnaround time
+* Dependency injection coverage
+* Reactive state update scenarios tested
+
 
 ## 10. Consistency Standards Across Developers
 
